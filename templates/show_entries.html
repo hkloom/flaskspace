@@ -17,6 +17,9 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
 
 {% extends "layout.html" %}
 {% block body %}
+
+
+<script> /*
     <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
       <dl>
 
@@ -27,6 +30,8 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
         <dd><input type=submit value=Share>
       </dl>
     </form>
+
+    */ </script>
   <ul class=entries>
   {% for entry in entries %}
 
@@ -72,15 +77,15 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
         var ctx=c.getContext("2d");
         ctx.fillStyle="#FFFFFF";
         ctx.globalAlpha=0.05;
-        ctx.fillRect(0,0,600,400,1);
+        ctx.fillRect(0,0,800,500,1);
         ctx.globalAlpha=1.0;
         ctx.fillStyle="#000000";
 
         for (var k =1; k<=5; k++){
           ctx.fillStyle=document.getElementById("color"+k+"{{entry.id}}").value;
           for (var j = 0; j < 150; j++){
-            var x = Math.random()*6;
-            var y = Math.random()*4;
+            var x = Math.random()*8;
+            var y = Math.random()*5;
 
             for (var d = 0; d < 50; d++){
               x += 0.015*dx(x,y);
@@ -102,13 +107,26 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
 
         );
 
+      $('#div{{entry.id}}').click(
+        function toggle(e){
+          e.preventDefault();
+          $('#content{{entry.id}}').toggle(600);
+          if ($('#content{{entry.id}}').is(":visible")){
+            $('#draw{{entry.id}}').click();
+          }else{
+            $('#stop{{entry.id}}').click();
+          }
+        }
+      );
       
 
   });
   </script>
-  <div align = "center">
-   <canvas id = "canvas{{entry.id}}" width = "600" height = "400"></canvas>
+  <a id ="a" href = "">
+  <div align = "center" id = "div{{entry.id}}">
+   <canvas id = "canvas{{entry.id}}" width = "800" height = "500"></canvas>
  </div>
+</a>
    <div id="content{{entry.id}}" align="center">
    <form id="input{{entry.id}}" method="post" action="/">
 <label for="dx{{entry.id}}">dx=</label>
@@ -126,8 +144,8 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
   <input type='submit' value="Save" id="save{{entry.id}}" name="save"/>
   <input type='button' value="Draw" id="draw{{entry.id}}" name="draw"/>
   <input type='button' id="randomcolors{{entry.id}}" value = "Random Colors"/>
-  <input type='button' id="stop{{entry.id}}" value = "stop"/>
-  <input type=
+  <input type='button' id="stop{{entry.id}}" value = "Stop"/>
+  <input type='button' id="upvote{{entry.id}}" value = "Upvote!" />
 </form>
 </div>
 
@@ -137,6 +155,7 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
   for (var k=0;k<5;k++){
     drawLines();
   }
+  $('#content{{entry.id}}').toggle();
 
   function drawLines(){
         var dx = new Function('x','y', 'return '+document.getElementById("dx{{entry.id}}").value);
@@ -145,15 +164,15 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
         var ctx=c.getContext("2d");
         ctx.fillStyle="#FFFFFF";
         ctx.globalAlpha=0.05;
-        ctx.fillRect(0,0,600,400,1);
+        ctx.fillRect(0,0,800,500,1);
         ctx.globalAlpha=1.0;
         ctx.fillStyle="#000000";
 
         for (var k =1; k<=5; k++){
           ctx.fillStyle=document.getElementById("color"+k+"{{entry.id}}").value;
           for (var j = 0; j < 200; j++){
-            var x = Math.random()*6;
-            var y = Math.random()*4;
+            var x = Math.random()*8;
+            var y = Math.random()*5;
 
             for (var d = 0; d < 50; d++){
               x += 0.006*dx(x,y);
@@ -165,7 +184,11 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
       }
 
   </script>
-
+</br>
+</br>
+</br>
+</br>
+</br>
 
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em>
