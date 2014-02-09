@@ -30,15 +30,12 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
   <ul class=entries>
   {% for entry in entries %}
 
-  id = "{{entry.id}}"
-
   <script>
     $(document).ready(function(){
-      
+
       $('#randomcolors{{entry.id}}').click(
         function randomcolors(e){
           e.preventDefault();
-          alert("random colors!");
           c1 = document.getElementById("color1{{entry.id}}");
           c2 = document.getElementById("color2{{entry.id}}");
           c3 = document.getElementById("color3{{entry.id}}");
@@ -57,52 +54,62 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
         });
 
       $('#draw{{entry.id}}').click(
-        function(){
-        alert("fooed");
-        var dx = new Function('x','y', 'return '+$("#dx{{entry.id}}"));
-        var dy = new Function('x','y', 'return '+$("#dy{{entry.id}}"));
+        function drawclick(){
+          if (animating != {{entry.id}}){
+          animating = {{entry.id}};
+          function draw(){
+
+            //console.log('drawing');
+
+            
+          if (animating == {{entry.id}} ){
+            setTimeout(function(){
+            requestAnimationFrame(draw);
+          }, 1000/60);
+        var dx = new Function('x','y', 'return '+document.getElementById("dx{{entry.id}}").value);
+        var dy = new Function('x','y', 'return '+document.getElementById("dy{{entry.id}}").value);
         var c=document.getElementById("canvas{{entry.id}}");
         var ctx=c.getContext("2d");
         ctx.fillStyle="#FFFFFF";
         ctx.globalAlpha=0.05;
-        ctx.fillRect(0,0,800,500,1);
+        ctx.fillRect(0,0,600,400,1);
         ctx.globalAlpha=1.0;
         ctx.fillStyle="#000000";
 
         for (var k =1; k<=5; k++){
           ctx.fillStyle=document.getElementById("color"+k+"{{entry.id}}").value;
-          for (var j = 0; j < 200; j++){
+          for (var j = 0; j < 150; j++){
             var x = Math.random()*6;
             var y = Math.random()*4;
 
             for (var d = 0; d < 50; d++){
               x += 0.015*dx(x,y);
               y += 0.015*dy(x,y);
-              ctx.fillRect(x*100,y*100,0.5,0.5);
+              ctx.fillRect(x*100,y*100,0.9,0.9);
             }
           }
         }
-        if ($("#content{{entry.id}}").is(':visible')){
-         createAnimationFrame($('#draw{{entry.id}}').click());
-        }
-
+       }}
+       draw();
       } 
+      }
       );
 
       $('#stop{{entry.id}}').click(
           function(){
-            $("#content{{entry.id}}").hide(500);
+            animating = 0;
           }
 
         );
 
-  });
-
       
 
+  });
   </script>
+  <div align = "center">
    <canvas id = "canvas{{entry.id}}" width = "600" height = "400"></canvas>
-   <div id="content{{entry.id}}">
+ </div>
+   <div id="content{{entry.id}}" align="center">
    <form id="input{{entry.id}}" method="post" action="/">
 <label for="dx{{entry.id}}">dx=</label>
     <input id="dx{{entry.id}}" type="text" name="dx" maxlength="500" value = {{entry.dx}} size = "100">
@@ -120,18 +127,56 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
   <input type='button' value="Draw" id="draw{{entry.id}}" name="draw"/>
   <input type='button' id="randomcolors{{entry.id}}" value = "Random Colors"/>
   <input type='button' id="stop{{entry.id}}" value = "stop"/>
+  <input type=
 </form>
 </div>
 
 
 
-  <script>
-  //alert("sup");
+  <script>  
+  for (var k=0;k<5;k++){
+    drawLines();
+  }
+
+  function drawLines(){
+        var dx = new Function('x','y', 'return '+document.getElementById("dx{{entry.id}}").value);
+        var dy = new Function('x','y', 'return '+document.getElementById("dy{{entry.id}}").value);
+        var c=document.getElementById("canvas{{entry.id}}");
+        var ctx=c.getContext("2d");
+        ctx.fillStyle="#FFFFFF";
+        ctx.globalAlpha=0.05;
+        ctx.fillRect(0,0,600,400,1);
+        ctx.globalAlpha=1.0;
+        ctx.fillStyle="#000000";
+
+        for (var k =1; k<=5; k++){
+          ctx.fillStyle=document.getElementById("color"+k+"{{entry.id}}").value;
+          for (var j = 0; j < 200; j++){
+            var x = Math.random()*6;
+            var y = Math.random()*4;
+
+            for (var d = 0; d < 50; d++){
+              x += 0.006*dx(x,y);
+              y += 0.006*dy(x,y);
+              ctx.fillRect(x*100,y*100,0.8,0.8);
+            }
+          }
+        }
+      }
+
   </script>
 
 
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em>
   {% endfor %}
+
+  <script>
+
+  var requestid;
+  var animating = 0;
+
+
+  </script>
   </ul>
 {% endblock %}
