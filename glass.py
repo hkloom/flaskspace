@@ -51,8 +51,8 @@ def show_entries():
 @app.route('/add', methods=['POST'])
 def add_entry():
     db = get_db()
-    db.execute('insert into entries (dx, dy) values (?, ?)',
-                 [request.form['dx'], request.form['dy']])
+    db.execute('insert into entries (dx, dy, color1, color2, color3, color4, color5) values (?, ?, ?, ?, ?, ?, ?)',
+                 [request.form['dx'], request.form['dy'], request.form['color1'],request.form['color2'],request.form['color3'],request.form['color4'],request.form['color5']])
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))

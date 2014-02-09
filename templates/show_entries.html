@@ -18,20 +18,10 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
 {% extends "layout.html" %}
 {% block body %}
 
+</br>
+</br>
 
-<script> /*
-    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
-      <dl>
 
-        <dt>DX:
-        <dd><textarea name="dx" rows=5 cols=40></textarea>
-        <dt>DY:
-        <dd><textarea name="dy" rows=5 cols=40></textarea>
-        <dd><input type=submit value=Share>
-      </dl>
-    </form>
-
-    */ </script>
   <ul class=entries>
   {% for entry in entries %}
 
@@ -94,7 +84,12 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
             }
           }
         }
-       }}
+       }else{
+        $('#content{{entry.id}}').hide(600);
+       }
+
+
+     }
        draw();
       } 
       }
@@ -110,25 +105,26 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
       $('#div{{entry.id}}').click(
         function toggle(e){
           e.preventDefault();
-          $('#content{{entry.id}}').toggle(600);
-          if ($('#content{{entry.id}}').is(":visible")){
+          animating = 0;
+          if (!$('#content{{entry.id}}').is(":visible")){
             $('#draw{{entry.id}}').click();
-          }else{
-            $('#stop{{entry.id}}').click();
           }
+          $('#content{{entry.id}}').toggle(600);
         }
       );
       
 
   });
   </script>
+
+
   <a id ="a" href = "">
   <div align = "center" id = "div{{entry.id}}">
    <canvas id = "canvas{{entry.id}}" width = "800" height = "500"></canvas>
  </div>
 </a>
    <div id="content{{entry.id}}" align="center">
-   <form id="input{{entry.id}}" method="post" action="/">
+   <form id="input{{entry.id}}" method="post" action="/add">
 <label for="dx{{entry.id}}">dx=</label>
     <input id="dx{{entry.id}}" type="text" name="dx" maxlength="500" value = {{entry.dx}} size = "100">
 </br>
@@ -152,7 +148,7 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
 
 
   <script>  
-  for (var k=0;k<5;k++){
+  for (var k=0;k<15;k++){
     drawLines();
   }
   $('#content{{entry.id}}').toggle();
