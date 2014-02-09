@@ -44,7 +44,7 @@ def close_db(error):
 @app.route('/')
 def show_entries():
     db = get_db()
-    cur = db.execute('select dx, dy from entries order by id desc')
+    cur = db.execute('select color1, color2, color3, color4, color5, id, dx, dy from entries order by id desc')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 

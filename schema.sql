@@ -3,11 +3,11 @@ create table entries (
   id integer primary key autoincrement,
   dx text not null,
   dy text not null,
-  votes integer not null,
-  created timestamp not null,
-  color1 text not null,
-  color2 text not null,
-  color3 text not null,
-  color4 text not null,
-  color5 text not null
+  votes integer default 0,
+  created timestamp default current_timestamp,
+  color1 text default "000000",
+  color2 text default "000000",
+  color3 text default "000000",
+  color4 text default "000000",
+  color5 text default "000000"
 );
