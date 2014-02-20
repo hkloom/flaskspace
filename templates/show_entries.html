@@ -12,6 +12,16 @@ function sqrt(x){ return Math.sqrt(x); }
 function sinh(x){ return (exp(x)-exp(-x))/2; }
 function cosh(x){ return (exp(x)+exp(-x))/2; }
 
+
+$(window).keydown(function(event){
+  if(event.keyCode == 13) {
+    event.preventDefault();
+    return false;
+  }
+});
+
+
+
 </script>
 
 
@@ -20,182 +30,208 @@ function cosh(x){ return (exp(x)+exp(-x))/2; }
 
 </br>
 </br>
+<script>
+var list = new Array();
+var counter = 0;
+</script>
 
-
-  <ul class=entries>
+<ul class=entries>
   {% for entry in entries %}
 
   <script>
-    $(document).ready(function(){
 
-      $('#randomcolors{{entry.id}}').click(
-        function randomcolors(e){
-          e.preventDefault();
-          c1 = document.getElementById("color1{{entry.id}}");
-          c2 = document.getElementById("color2{{entry.id}}");
-          c3 = document.getElementById("color3{{entry.id}}");
-          c4 = document.getElementById("color4{{entry.id}}");
-          c5 = document.getElementById("color5{{entry.id}}");
-          c1.value = (Math.random()*0xFFFFFF<<0).toString(16);
-          c2.value = (Math.random()*0xFFFFFF<<0).toString(16);
-          c3.value = (Math.random()*0xFFFFFF<<0).toString(16);
-          c4.value = (Math.random()*0xFFFFFF<<0).toString(16);
-          c5.value = (Math.random()*0xFFFFFF<<0).toString(16);
-          c1.color.fromString(c1.value);
-          c2.color.fromString(c2.value);
-          c3.color.fromString(c3.value);
-          c4.color.fromString(c4.value);
-          c5.color.fromString(c5.value);
-        });
-
-      $('#draw{{entry.id}}').click(
-        function drawclick(){
-          if (animating != {{entry.id}}){
-          animating = {{entry.id}};
-          function draw(){
-
-            //console.log('drawing');
-
-            
-          if (animating == {{entry.id}} ){
-            setTimeout(function(){
-            requestAnimationFrame(draw);
-          }, 1000/60);
-        var dx = new Function('x','y', 'return '+document.getElementById("dx{{entry.id}}").value);
-        var dy = new Function('x','y', 'return '+document.getElementById("dy{{entry.id}}").value);
-        var c=document.getElementById("canvas{{entry.id}}");
-        var ctx=c.getContext("2d");
-        ctx.fillStyle="#FFFFFF";
-        ctx.globalAlpha=0.05;
-        ctx.fillRect(0,0,800,500,1);
-        ctx.globalAlpha=1.0;
-        ctx.fillStyle="#000000";
-
-        for (var k =1; k<=5; k++){
-          ctx.fillStyle=document.getElementById("color"+k+"{{entry.id}}").value;
-          for (var j = 0; j < 150; j++){
-            var x = Math.random()*8;
-            var y = Math.random()*5;
-
-            for (var d = 0; d < 50; d++){
-              x += 0.015*dx(x,y);
-              y += 0.015*dy(x,y);
-              ctx.fillRect(x*100,y*100,0.9,0.9);
-            }
-          }
-        }
-       }else{
-        $('#content{{entry.id}}').hide(600);
-       }
-
-
-     }
-       draw();
-      } 
-      }
-      );
-
-      $('#stop{{entry.id}}').click(
-          function(){
-            animating = 0;
-          }
-
-        );
-
-      $('#div{{entry.id}}').click(
-        function toggle(e){
-          e.preventDefault();
-          animating = 0;
-          if (!$('#content{{entry.id}}').is(":visible")){
-            $('#draw{{entry.id}}').click();
-          }
-          $('#content{{entry.id}}').toggle(600);
-        }
-      );
-      
-
-  });
+  list.push({id:"{{entry.id}}",
+    dx:"{{entry.dx}}",
+    dy:"{{entry.dy}}",
+    color1:"{{entry.color1}}",
+    color2:"{{entry.color2}}",
+    color3:"{{entry.color3}}",
+    color4:"{{entry.color4}}",
+    color5:"{{entry.color5}}"});
   </script>
 
+  
 
-  <a id ="a" href = "">
-  <div align = "center" id = "div{{entry.id}}">
-   <canvas id = "canvas{{entry.id}}" width = "800" height = "500"></canvas>
- </div>
-</a>
-   <div id="content{{entry.id}}" align="center">
-   <form id="input{{entry.id}}" method="post" action="/add">
-<label for="dx{{entry.id}}">dx=</label>
-    <input id="dx{{entry.id}}" type="text" name="dx" maxlength="500" value = {{entry.dx}} size = "100">
-</br>
- <label for="dy{{entry.id}}">dy=</label>
-    <input id="dy{{entry.id}}" type="text" name="dy" maxlength="500" value = {{entry.dy}} size="100">
-</br>
-    <input class="color"  value = "{{entry.color1}}" id = "color1{{entry.id}}" name="color1">
-    <input class="color"  value = "{{entry.color2}}" id = "color2{{entry.id}}" name="color2">
-    <input class="color"  value = "{{entry.color3}}" id = "color3{{entry.id}}" name="color3">
-    <input class="color"  value = "{{entry.color4}}" id = "color4{{entry.id}}" name="color4">
-    <input class="color"  value = "{{entry.color5}}" id = "color5{{entry.id}}" name="color5">
-  </br>
-  <input type='submit' value="Save" id="save{{entry.id}}" name="save"/>
-  <input type='button' value="Draw" id="draw{{entry.id}}" name="draw"/>
-  <input type='button' id="randomcolors{{entry.id}}" value = "Random Colors"/>
-  <input type='button' id="stop{{entry.id}}" value = "Stop"/>
-  <input type='button' id="upvote{{entry.id}}" value = "Upvote!" />
-</form>
-</div>
-
-
-
-  <script>  
-  for (var k=0;k<15;k++){
-    drawLines();
-  }
-  $('#content{{entry.id}}').toggle();
-
-  function drawLines(){
-        var dx = new Function('x','y', 'return '+document.getElementById("dx{{entry.id}}").value);
-        var dy = new Function('x','y', 'return '+document.getElementById("dy{{entry.id}}").value);
-        var c=document.getElementById("canvas{{entry.id}}");
-        var ctx=c.getContext("2d");
-        ctx.fillStyle="#FFFFFF";
-        ctx.globalAlpha=0.05;
-        ctx.fillRect(0,0,800,500,1);
-        ctx.globalAlpha=1.0;
-        ctx.fillStyle="#000000";
-
-        for (var k =1; k<=5; k++){
-          ctx.fillStyle=document.getElementById("color"+k+"{{entry.id}}").value;
-          for (var j = 0; j < 200; j++){
-            var x = Math.random()*8;
-            var y = Math.random()*5;
-
-            for (var d = 0; d < 50; d++){
-              x += 0.006*dx(x,y);
-              y += 0.006*dy(x,y);
-              ctx.fillRect(x*100,y*100,0.8,0.8);
-            }
-          }
-        }
-      }
-
-  </script>
-</br>
-</br>
-</br>
-</br>
-</br>
-
-  {% else %}
-    <li><em>Unbelievable.  No entries here so far</em>
   {% endfor %}
+
+  <p>Testing</p>
 
   <script>
 
-  var requestid;
   var animating = 0;
 
+  function randomcolors(id){
+    c1 = document.getElementById("color1"+id);
+    c2 = document.getElementById("color2"+id);
+    c3 = document.getElementById("color3"+id);
+    c4 = document.getElementById("color4"+id);
+    c5 = document.getElementById("color5"+id);
+    c1.value = (Math.random()*0xFFFFFF<<0).toString(16);
+    c2.value = (Math.random()*0xFFFFFF<<0).toString(16);
+    c3.value = (Math.random()*0xFFFFFF<<0).toString(16);
+    c4.value = (Math.random()*0xFFFFFF<<0).toString(16);
+    c5.value = (Math.random()*0xFFFFFF<<0).toString(16);
+    c1.color.fromString(c1.value);
+    c2.color.fromString(c2.value);
+    c3.color.fromString(c3.value);
+    c4.color.fromString(c4.value);
+    c5.color.fromString(c5.value);
+  }
 
-  </script>
-  </ul>
+  function stop(){
+    animating = 0;
+  }
+
+  function toggle(id){
+  if (!$('#content'+id).is(":visible")){
+      animating = id;
+      $('#draw'+id).click();
+    }else{
+      animating = 0;
+    }
+    $('#content'+id).toggle(600);
+  }
+
+
+window.requestAnimFrame = (function(callback) {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        function(callback) {
+          window.setTimeout(callback, 1000 / 60);
+        };
+      })();
+
+
+  function drawLines(){
+
+    if (animating != 0){
+      setTimeout(drawLines, 1000 / 60);
+ 
+      var id = animating;
+      var dx = new Function('x','y', 'return '+document.getElementById("dx"+id).value+';');
+      var dy = new Function('x','y', 'return '+document.getElementById("dy"+id).value+';');
+      var c=document.getElementById("canvas"+id);
+      var ctx=c.getContext("2d");
+      ctx.fillStyle="#FFFFFF";
+      ctx.globalAlpha=0.05;
+      ctx.fillRect(0,0,800,500,1);
+      ctx.globalAlpha=1.0;
+      ctx.fillStyle="#000000";
+      for (var k =1; k<=5; k++){
+        ctx.fillStyle=document.getElementById("color"+k+id).value;
+        for (var j = 0; j < 200; j++){
+          var x = Math.random()*8;
+          var y = Math.random()*5;
+          for (var d = 0; d < 50; d++){
+            x += 0.015*dx(x,y);
+            y += 0.015*dy(x,y);
+            ctx.fillRect(x*100,y*100,0.8,0.8);
+          }
+        }
+      }
+    
+    
+
+    }
+
+  }
+
+  function addSystem(ctr){
+    var sys = list[ctr];
+    
+
+
+    document.write('<a id ="a" href = ""> \
+      <div align = "center" id = "div'+sys.id+'"> \
+      <canvas id = "canvas'+sys.id+'" width = "800" height = "500"></canvas> \
+      </div> \
+      </a> \
+      <div id="content'+sys.id+'" align="center"> \
+      <form id="input'+sys.id+'" method="post" action="/add"> \
+      <label for="dx'+sys.id+'">dx=</label> \
+      <input id="dx'+sys.id+'" type="text" name="dx" maxlength="500" value = '+sys.dx+' size = "100"> \
+      </br> \
+      <label for="dy'+sys.id+'">dy=</label> \
+      <input id="dy'+sys.id+'" type="text" name="dy" maxlength="500" value = '+sys.dy+' size="100"> \
+      </br> \
+      <input class="color"  value = "'+sys.color1+'" id = "color1'+sys.id+'" name="color1"> \
+      <input class="color"  value = "'+sys.color2+'" id = "color2'+sys.id+'" name="color2"> \
+      <input class="color"  value = "'+sys.color3+'" id = "color3'+sys.id+'" name="color3"> \
+      <input class="color"  value = "'+sys.color4+'" id = "color4'+sys.id+'" name="color4"> \
+      <input class="color"  value = "'+sys.color5+'" id = "color5'+sys.id+'" name="color5"> \
+      </br> \
+      <input type="submit" value="Save" id="save'+sys.id+'" name="save"/> \
+      <input type="button" value="Draw" id="draw'+sys.id+'" name="draw"/> \
+      <input type="button" id="randomcolors'+sys.id+'" value = "Random Colors"/> \
+      <input type="button" id="stop'+sys.id+'" value = "Stop"/> \
+      <input type="button" id="upvote'+sys.id+'" value = "Upvote!" /> \
+      </form> \
+      </div>'  );
+$(document).ready(function(){
+  $('#randomcolors'+sys.id).click(function(){randomcolors(sys.id);});
+  $('#draw'+sys.id).click(function(){drawLines();});
+  $('#stop'+sys.id).click(function(){sys.stop();});
+  $('#div'+sys.id).click(function(e){e.preventDefault();toggle(sys.id);});
+  //$('#save'+sys.id).click(function(e){})
+});
+}
+
+/*
+    for (var k=0;k<15;k++){
+  drawLines();
+}
+$('#content'+sys.id).toggle();
+*/
+
+//  }
+
+for (var i = 0; i<Math.min(3,list.length); i++){
+  document.write('<p> Hello '+counter+' dx = ' + list[i].dx+'</p>');
+  addSystem(i);
+  counter = counter+1;
+}
+  /*
+//    console.log(counter);
+    for (System s in list){
+//      console.log(counter);
+   counter = counter+1;
+      //addSystem(s);
+    }*/
+
+
+    </script>
+
+
+
+    <script>
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+</br>
+</br>
+</br>
+</br>
+</br>
+
+<script>
+
+var requestid;
+var animating = 0;
+
+
+</script>
+</ul>
 {% endblock %}
